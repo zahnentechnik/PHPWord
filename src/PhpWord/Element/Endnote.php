@@ -27,7 +27,7 @@ class Endnote extends Footnote
     /**
      * @var string Container type
      */
-    protected $container = 'Endnote';
+    protected string $container = 'Endnote';
 
     /**
      * Create new instance.

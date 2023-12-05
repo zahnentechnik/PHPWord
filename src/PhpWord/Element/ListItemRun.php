@@ -27,7 +27,7 @@ class ListItemRun extends TextRun
     /**
      * @var string Container type
      */
-    protected $container = 'ListItemRun';
+    protected string $container = 'ListItemRun';
 
     /**
      * ListItem Style.

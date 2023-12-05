@@ -36,7 +36,7 @@ class Footer extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected $container = 'Footer';
+    protected string $container = 'Footer';
 
     /**
      * Header type.

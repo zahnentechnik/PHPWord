@@ -21,6 +21,7 @@ use DateTime;
 use InvalidArgumentException;
 use PhpOffice\PhpWord\Media;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Style;
 
 /**
  * Element abstract class.
@@ -428,14 +429,14 @@ abstract class AbstractElement
      * Set new style value.
      *
      * @param mixed $styleObject Style object
-     * @param null|array|\PhpOffice\PhpWord\Style|string $styleValue Style value
+     * @param array|string|Style|null $styleValue Style value
      * @param bool $returnObject Always return object
      *
      * @return mixed
      */
     protected function setNewStyle($styleObject, $styleValue = null, $returnObject = false)
     {
-        if (null !== $styleValue && is_array($styleValue)) {
+        if (is_array($styleValue)) {
             $styleObject->setStyleByArray($styleValue);
             $style = $styleObject;
         } else {

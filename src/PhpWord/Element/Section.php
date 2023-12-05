@@ -26,7 +26,7 @@ class Section extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected $container = 'Section';
+    protected string $container = 'Section';
 
     /**
      * Section style.

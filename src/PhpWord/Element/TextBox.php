@@ -29,7 +29,7 @@ class TextBox extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected $container = 'TextBox';
+    protected string $container = 'TextBox';
 
     /**
      * TextBox style.

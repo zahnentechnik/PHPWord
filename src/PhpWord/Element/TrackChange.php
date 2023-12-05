@@ -33,7 +33,7 @@ class TrackChange extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected $container = 'TrackChange';
+    protected string $container = 'TrackChange';
 
     /**
      * The type of change, (insert or delete), not applicable for PhpOffice\PhpWord\Element\Comment.

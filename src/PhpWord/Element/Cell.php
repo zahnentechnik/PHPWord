@@ -27,27 +27,27 @@ class Cell extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected $container = 'Cell';
+    protected string $container = 'Cell';
 
     /**
      * Cell width.
      *
      * @var ?int
      */
-    private $width;
+    private ?int $width;
 
     /**
      * Cell style.
      *
-     * @var ?\PhpOffice\PhpWord\Style\Cell
+     * @var ?CellStyle
      */
-    private $style;
+    private mixed $style;
 
     /**
      * Create new instance.
      *
-     * @param null|int $width
-     * @param array|\PhpOffice\PhpWord\Style\Cell $style
+     * @param int|null $width
+     * @param array|CellStyle|null|string $style
      */
     public function __construct($width = null, $style = null)
     {
@@ -58,9 +58,9 @@ class Cell extends AbstractContainer
     /**
      * Get cell style.
      *
-     * @return ?\PhpOffice\PhpWord\Style\Cell
+     * @return ?CellStyle
      */
-    public function getStyle()
+    public function getStyle(): ?CellStyle
     {
         return $this->style;
     }
@@ -70,7 +70,7 @@ class Cell extends AbstractContainer
      *
      * @return ?int
      */
-    public function getWidth()
+    public function getWidth(): ?int
     {
         return $this->width;
     }

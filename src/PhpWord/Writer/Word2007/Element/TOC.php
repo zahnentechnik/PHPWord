@@ -33,7 +33,7 @@ use PhpOffice\PhpWord\Writer\Word2007\Style\Tab as TabStyleWriter;
 class TOC extends AbstractElement
 {
     /**
-     * Write element.
+     * Write the style information for a TOCElement.
      */
     public function write(): void
     {
@@ -63,15 +63,21 @@ class TOC extends AbstractElement
     }
 
     /**
-     * Write title.
+     * Write the title information for a TOCElement.
+     *
+     * @param XMLWriter $xmlWriter The XMLWriter object to write to.
+     * @param TOCElement $element The TOCElement to write the title for.
+     * @param Title $title The title information.
+     * @param bool $writeFieldMark Whether to write the field mark.
+     * @return void
      */
     private function writeTitle(XMLWriter $xmlWriter, TOCElement $element, Title $title, bool $writeFieldMark): void
     {
         $tocStyle = $element->getStyleTOC();
         $fontStyle = $element->getStyleFont();
-        $isObject = ($fontStyle instanceof Font) ? true : false;
+        $isObject = $fontStyle instanceof Font;
         $rId = $title->getRelationId();
-        $indent = (int) (($title->getDepth() - 1) * $tocStyle->getIndent());
+        $indent = (int)(($title->getDepth() - 1) * $tocStyle->getIndent());
 
         $xmlWriter->startElement('w:p');
 
@@ -126,7 +132,7 @@ class TOC extends AbstractElement
 
             $xmlWriter->startElement('w:r');
             $xmlWriter->startElement('w:t');
-            $xmlWriter->text((string) $title->getPageNumber());
+            $xmlWriter->text((string)$title->getPageNumber());
             $xmlWriter->endElement();
             $xmlWriter->endElement();
         }
@@ -143,13 +149,18 @@ class TOC extends AbstractElement
     }
 
     /**
-     * Write style.
+     * Write the style information for a TOCElement.
+     *
+     * @param XMLWriter $xmlWriter The XMLWriter object to write to.
+     * @param TOCElement $element The TOCElement to write the style for.
+     * @param int $indent The indent value for the element.
+     * @return void
      */
     private function writeStyle(XMLWriter $xmlWriter, TOCElement $element, int $indent): void
     {
         $tocStyle = $element->getStyleTOC();
         $fontStyle = $element->getStyleFont();
-        $isObject = ($fontStyle instanceof Font) ? true : false;
+        $isObject = $fontStyle instanceof Font;
 
         $xmlWriter->startElement('w:pPr');
 
@@ -185,7 +196,11 @@ class TOC extends AbstractElement
     }
 
     /**
-     * Write TOC Field.
+     * Write the field mark for a TOCElement.
+     *
+     * @param XMLWriter $xmlWriter The XMLWriter object to write to.
+     * @param TOCElement $element The TOCElement to write the field mark for.
+     * @return void
      */
     private function writeFieldMark(XMLWriter $xmlWriter, TOCElement $element): void
     {
