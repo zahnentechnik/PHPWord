@@ -799,6 +799,9 @@ class Html
                     $styles['spaceAfter'] = Converter::cssToTwip($value);
 
                     break;
+                case 'margin-left':
+                    $styles['indentation']['left'] = Converter::cssToPoint($value);
+                    break;
                 case 'border-color':
                     self::mapBorderColor($styles, $value);
 
