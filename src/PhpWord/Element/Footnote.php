@@ -24,7 +24,7 @@ class Footnote extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected string $container = 'Footnote';
+    protected $container = 'Footnote';
 
     /**
      * Paragraph style.

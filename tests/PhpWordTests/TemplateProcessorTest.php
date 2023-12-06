@@ -303,7 +303,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
                 </w:tc>
             </w:tr>
         </w:tbl>';
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
 
         self::assertEquals(
             ['userId', 'userName', 'userLocation'],
@@ -324,7 +324,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(Exception::class);
         $mainPart = '<?xml version="1.0" encoding="UTF-8"?><w:p><w:r><w:rPr></w:rPr><w:t>text</w:t></w:r></w:p>';
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
 
         $templateProcessor->cloneRow('fake_search', 2);
     }
@@ -372,7 +372,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
                 </w:tc>
             </w:tr>
         </w:tbl>';
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroOpeningChars('{{');
         $templateProcessor->setMacroClosingChars('}}');
 
@@ -511,7 +511,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setComplexBlock('document-title', $title);
         $templateProcessor->setComplexValue('firstname', $firstname);
         $templateProcessor->setComplexValue('lastname', $lastname);
@@ -564,7 +564,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{{', '}}');
         $templateProcessor->setComplexBlock('document-title', $title);
         $templateProcessor->setComplexValue('firstname', $firstname);
@@ -585,7 +585,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setValues(['firstname' => 'John', 'lastname' => 'Doe']);
 
         self::assertStringContainsString('Hello John Doe', $templateProcessor->getMainPart());
@@ -603,7 +603,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{#', '#}');
         $templateProcessor->setValues(['firstname' => 'John', 'lastname' => 'Doe']);
 
@@ -679,7 +679,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:sdt>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setCheckbox('checkbox', true);
         $templateProcessor->setCheckbox('checkbox2', false);
 
@@ -755,7 +755,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:sdt>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{#', '#}');
         $templateProcessor->setCheckbox('checkbox', true);
         $templateProcessor->setCheckbox('checkbox2', false);
@@ -1071,7 +1071,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->cloneBlock('CLONEME', 3);
 
         self::assertEquals(3, substr_count($templateProcessor->getMainPart(), 'This block will be cloned with ${variable}'));
@@ -1100,7 +1100,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{{', '}}');
         $templateProcessor->cloneBlock('CLONEME', 3);
 
@@ -1130,7 +1130,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->cloneBlock('CLONEME', 3, true, true);
 
         self::assertStringContainsString('Address ${address#1}, Street ${street#1}', $templateProcessor->getMainPart());
@@ -1161,7 +1161,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:r>
         </w:p>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{{', '}}');
         $templateProcessor->cloneBlock('CLONEME', 3, true, true);
 
@@ -1195,7 +1195,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             ['city' => 'New York', 'street' => '5th Avenue'],
             ['city' => 'Rome', 'street' => 'Via della Conciliazione'],
         ];
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->cloneBlock('CLONEME', 0, true, false, $replacements);
 
         self::assertStringContainsString('City: London, Street: Baker Street', $templateProcessor->getMainPart());
@@ -1228,7 +1228,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             ['city' => 'New York', 'street' => '5th Avenue'],
             ['city' => 'Rome', 'street' => 'Via della Conciliazione'],
         ];
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{{', '}}');
         $templateProcessor->cloneBlock('CLONEME', 0, true, false, $replacements);
 
@@ -1244,7 +1244,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testFixBrokenMacros(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
 
         $fixed = $templateProcessor->fixBrokenMacros('<w:r><w:t>normal text</w:t></w:r>');
         self::assertEquals('<w:r><w:t>normal text</w:t></w:r>', $fixed);
@@ -1275,7 +1275,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testFixBrokenMacrosWithCustomMacro(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
         $templateProcessor->setMacroChars('{{', '}}');
 
         $fixed = $templateProcessor->fixBrokenMacros('<w:r><w:t>normal text</w:t></w:r>');
@@ -1330,7 +1330,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetVariables(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
 
         $variables = $templateProcessor->getVariablesForPart('<w:r><w:t>normal text</w:t></w:r>');
         self::assertEquals([], $variables);
@@ -1347,7 +1347,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetVariablesWithCustomMacro(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
         $templateProcessor->setMacroOpeningChars('{{');
         $templateProcessor->setMacroClosingChars('}}');
 
@@ -1366,7 +1366,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testTextNeedsSplitting(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
 
         self::assertFalse($templateProcessor->textNeedsSplitting('<w:r><w:rPr><w:b/><w:i/></w:rPr><w:t xml:space="preserve">${nothing-to-replace}</w:t></w:r>'));
 
@@ -1381,7 +1381,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testTextNeedsSplittingWithCustomMacro(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
         $templateProcessor->setMacroChars('{{', '}}');
 
         self::assertFalse($templateProcessor->textNeedsSplitting('<w:r><w:rPr><w:b/><w:i/></w:rPr><w:t xml:space="preserve">{{nothing-to-replace}}</w:t></w:r>'));
@@ -1397,7 +1397,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testSplitTextIntoTexts(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
 
         $splitText = $templateProcessor->splitTextIntoTexts('<w:r><w:rPr><w:b/><w:i/></w:rPr><w:t xml:space="preserve">${nothing-to-replace}</w:t></w:r>');
         self::assertEquals('<w:r><w:rPr><w:b/><w:i/></w:rPr><w:t xml:space="preserve">${nothing-to-replace}</w:t></w:r>', $splitText);
@@ -1411,7 +1411,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
      */
     public function testSplitTextIntoTextsWithCustomMacro(): void
     {
-        $templateProcessor = new TestableTemplateProcessor();
+        $templateProcessor = new TestableTemplateProcesor();
         $templateProcessor->setMacroChars('{{', '}}');
 
         $splitText = $templateProcessor->splitTextIntoTexts('<w:r><w:rPr><w:b/><w:i/></w:rPr><w:t xml:space="preserve">{{nothing-to-replace}}</w:t></w:r>');
@@ -1458,7 +1458,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:p>
         </w:document>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $position = $templateProcessor->findContainingXmlBlockForMacro('${title}', 'w:r');
 
         self::assertEquals($toFind, $templateProcessor->getSlice($position['start'], $position['end']));
@@ -1501,7 +1501,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
             </w:p>
         </w:document>';
 
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{{', '}}');
         $position = $templateProcessor->findContainingXmlBlockForMacro('{{title}}', 'w:r');
 
@@ -1520,7 +1520,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
                 </w:r>
             </w:p>
         </w:document>';
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
 
         //non-existing macro
         $result = $templateProcessor->findContainingXmlBlockForMacro('${fake-macro}', 'w:p');
@@ -1547,7 +1547,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
                 </w:r>
             </w:p>
         </w:document>';
-        $templateProcessor = new TestableTemplateProcessor($mainPart);
+        $templateProcessor = new TestableTemplateProcesor($mainPart);
         $templateProcessor->setMacroChars('{{', '}}');
 
         //non-existing macro
@@ -1568,7 +1568,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
         $settingsPart = '<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
             <w:zoom w:percent="100"/>
         </w:settings>';
-        $templateProcessor = new TestableTemplateProcessor(null, $settingsPart);
+        $templateProcessor = new TestableTemplateProcesor(null, $settingsPart);
 
         $templateProcessor->setUpdateFields(true);
         self::assertStringContainsString('<w:updateFields w:val="true"/>', $templateProcessor->getSettingsPart());
@@ -1594,7 +1594,7 @@ final class TemplateProcessorTest extends \PHPUnit\Framework\TestCase
         $settingsPart = '<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
             <w:zoom w:percent="100"/>
         </w:settings>';
-        $templateProcessor = new TestableTemplateProcessor(null, $settingsPart);
+        $templateProcessor = new TestableTemplateProcesor(null, $settingsPart);
         $templateProcessor->setMacroChars('{{', '}}');
 
         $templateProcessor->setUpdateFields(true);

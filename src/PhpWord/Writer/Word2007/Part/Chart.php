@@ -31,16 +31,16 @@ class Chart extends AbstractPart
     /**
      * Chart element.
      *
-     * @var ChartElement
+     * @var \PhpOffice\PhpWord\Element\Chart
      */
-    private ChartElement $element;
+    private $element;
 
     /**
      * Type definition.
      *
      * @var array
      */
-    private array $types = [
+    private $types = [
         'pie' => ['type' => 'pie', 'colors' => 1],
         'doughnut' => ['type' => 'doughnut', 'colors' => 1, 'hole' => 75, 'no3d' => true],
         'bar' => ['type' => 'bar', 'colors' => 0, 'axes' => true, 'bar' => 'bar', 'grouping' => 'clustered'],
@@ -60,7 +60,7 @@ class Chart extends AbstractPart
      *
      * @var array
      */
-    private array $options = [];
+    private $options = [];
 
     /**
      * Set chart element.
@@ -75,7 +75,7 @@ class Chart extends AbstractPart
      *
      * @return string
      */
-    public function write(): string
+    public function write()
     {
         $xmlWriter = $this->getXmlWriter();
 

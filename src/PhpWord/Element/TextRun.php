@@ -27,7 +27,7 @@ class TextRun extends AbstractContainer
     /**
      * @var string Container type
      */
-    protected string $container = 'TextRun';
+    protected $container = 'TextRun';
 
     /**
      * Paragraph style.

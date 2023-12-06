@@ -143,8 +143,7 @@ class CellTest extends AbstractWebServerEmbeddedTest
     public function testAddImageHeader(): void
     {
         $src = __DIR__ . '/../_files/images/earth.jpg';
-        $oCell = new Cell();
-        $oCell->setDocPart('Header', 1);
+        $oCell = new Cell('header', 1);
         $element = $oCell->addImage($src);
 
         self::assertCount(1, $oCell->getElements());
@@ -157,8 +156,7 @@ class CellTest extends AbstractWebServerEmbeddedTest
     public function testAddImageFooter(): void
     {
         $src = __DIR__ . '/../_files/images/earth.jpg';
-        $oCell = new Cell();
-        $oCell->setDocPart('Footer', 1);
+        $oCell = new Cell('footer', 1);
         $element = $oCell->addImage($src);
 
         self::assertCount(1, $oCell->getElements());

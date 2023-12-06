@@ -17,7 +17,6 @@
 
 namespace PhpOffice\PhpWordTests;
 
-use PhpOffice\PhpWord\Shared\ZipArchive;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 /**
@@ -26,64 +25,63 @@ use PhpOffice\PhpWord\TemplateProcessor;
  *
  * @author troosan
  */
-class TestableTemplateProcessor extends TemplateProcessor
+class TestableTemplateProcesor extends TemplateProcessor
 {
     public function __construct($mainPart = null, $settingsPart = null)
     {
         $this->tempDocumentMainPart = $mainPart;
         $this->tempDocumentSettingsPart = $settingsPart;
-        $this->zipClass = new ZipArchive();
     }
 
-    public function fixBrokenMacros($documentPart): string
+    public function fixBrokenMacros($documentPart)
     {
         return parent::fixBrokenMacros($documentPart);
     }
 
-    public function splitTextIntoTexts($text): string
+    public function splitTextIntoTexts($text)
     {
         return parent::splitTextIntoTexts($text);
     }
 
-    public function textNeedsSplitting(string $text): bool
+    public function textNeedsSplitting($text)
     {
         return parent::textNeedsSplitting($text);
     }
 
-    public function getVariablesForPart($documentPartXML): array
+    public function getVariablesForPart($documentPartXML)
     {
         $documentPartXML = parent::fixBrokenMacros($documentPartXML);
 
         return parent::getVariablesForPart($documentPartXML);
     }
 
-    public function findXmlBlockStart($offset, $blockType): int
+    public function findXmlBlockStart($offset, $blockType)
     {
         return parent::findXmlBlockStart($offset, $blockType);
     }
 
-    public function findContainingXmlBlockForMacro($macro, $blockType = 'w:p'): bool|array
+    public function findContainingXmlBlockForMacro($macro, $blockType = 'w:p')
     {
         return parent::findContainingXmlBlockForMacro($macro, $blockType);
     }
 
-    public function getSlice($startPosition, $endPosition = 0): string
+    public function getSlice($startPosition, $endPosition = 0)
     {
         return parent::getSlice($startPosition, $endPosition);
     }
 
     /**
-     * @return ?string
+     * @return string
      */
-    public function getMainPart(): ?string
+    public function getMainPart()
     {
         return $this->tempDocumentMainPart;
     }
 
     /**
-     * @return ?string
+     * @return string
      */
-    public function getSettingsPart(): ?string
+    public function getSettingsPart()
     {
         return $this->tempDocumentSettingsPart;
     }

@@ -25,7 +25,7 @@ class Header extends Footer
     /**
      * @var string Container type
      */
-    protected string $container = 'Header';
+    protected $container = 'Header';
 
     /**
      * Add a Watermark Element.

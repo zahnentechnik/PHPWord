@@ -58,16 +58,16 @@ abstract class AbstractContainer extends AbstractElement
     /**
      * Elements collection.
      *
-     * @var AbstractElement[]
+     * @var \PhpOffice\PhpWord\Element\AbstractElement[]
      */
-    protected array $elements = [];
+    protected $elements = [];
 
     /**
      * Container type Section|Header|Footer|Footnote|Endnote|Cell|TextRun|TextBox|ListItemRun|TrackChange.
      *
      * @var string
      */
-    protected string $container;
+    protected $container;
 
     /**
      * Magic method to catch all 'addElement' variation.
@@ -80,10 +80,9 @@ abstract class AbstractContainer extends AbstractElement
      * @param mixed $function
      * @param mixed $args
      *
-     * @return AbstractElement
-     * @throws \ReflectionException
+     * @return \PhpOffice\PhpWord\Element\AbstractElement
      */
-    public function __call(mixed $function, mixed $args)
+    public function __call($function, $args)
     {
         $elements = [
             'Text', 'TextRun', 'Bookmark', 'Link', 'PreserveText', 'TextBreak',
@@ -131,10 +130,9 @@ abstract class AbstractContainer extends AbstractElement
      *
      * @param string $elementName
      *
-     * @return AbstractElement
-     * @throws \ReflectionException
+     * @return \PhpOffice\PhpWord\Element\AbstractElement
      */
-    protected function addElement(string $elementName): AbstractElement
+    protected function addElement($elementName)
     {
         $elementClass = __NAMESPACE__ . '\\' . $elementName;
         $this->checkValidity($elementName);
@@ -151,7 +149,7 @@ abstract class AbstractContainer extends AbstractElement
         $elementArgs = $args;
         array_shift($elementArgs); // Shift the $elementName off the beginning of array
 
-        /** @var AbstractElement $element Type hint */
+        /** @var \PhpOffice\PhpWord\Element\AbstractElement $element Type hint */
         $element = $reflection->newInstanceArgs($elementArgs);
 
         // Set parent container
@@ -167,9 +165,9 @@ abstract class AbstractContainer extends AbstractElement
     /**
      * Get all elements.
      *
-     * @return AbstractElement[]
+     * @return \PhpOffice\PhpWord\Element\AbstractElement[]
      */
-    public function getElements(): array
+    public function getElements()
     {
         return $this->elements;
     }
@@ -179,9 +177,9 @@ abstract class AbstractContainer extends AbstractElement
      *
      * @param int $index
      *
-     * @return null|AbstractElement
+     * @return null|\PhpOffice\PhpWord\Element\AbstractElement
      */
-    public function getElement(int $index): ?AbstractElement
+    public function getElement($index)
     {
         if (array_key_exists($index, $this->elements)) {
             return $this->elements[$index];
@@ -193,13 +191,13 @@ abstract class AbstractContainer extends AbstractElement
     /**
      * Removes the element at requested index.
      *
-     * @param int|AbstractElement $toRemove
+     * @param int|\PhpOffice\PhpWord\Element\AbstractElement $toRemove
      */
-    public function removeElement(int|AbstractElement $toRemove): void
+    public function removeElement($toRemove): void
     {
         if (is_int($toRemove) && array_key_exists($toRemove, $this->elements)) {
             unset($this->elements[$toRemove]);
-        } elseif ($toRemove instanceof AbstractElement) {
+        } elseif ($toRemove instanceof \PhpOffice\PhpWord\Element\AbstractElement) {
             foreach ($this->elements as $key => $element) {
                 if ($element->getElementId() === $toRemove->getElementId()) {
                     unset($this->elements[$key]);
@@ -215,7 +213,7 @@ abstract class AbstractContainer extends AbstractElement
      *
      * @return int
      */
-    public function countElements(): int
+    public function countElements()
     {
         return count($this->elements);
     }
@@ -225,9 +223,9 @@ abstract class AbstractContainer extends AbstractElement
      *
      * @param string $method
      *
-     * @return void
+     * @return bool
      */
-    private function checkValidity(string $method): void
+    private function checkValidity($method)
     {
         $generalContainers = [
             'Section', 'Header', 'Footer', 'Footnote', 'Endnote', 'Cell', 'TextRun', 'TextBox', 'ListItemRun', 'TrackChange',
@@ -261,7 +259,7 @@ abstract class AbstractContainer extends AbstractElement
             'Chart' => ['Section', 'Cell'],
         ];
 
-        // Special condition, e.g. preservetext can only exist in cell when
+        // Special condition, e.g. preservetext can only exists in cell when
         // the cell is located in header or footer
         $validSubcontainers = [
             'PreserveText' => [['Cell'], ['Header', 'Footer', 'Section']],
@@ -288,5 +286,6 @@ abstract class AbstractContainer extends AbstractElement
             }
         }
 
+        return true;
     }
 }
