@@ -896,37 +896,35 @@ class TemplateProcessor
      *
      * @return null|string
      */
-    public function cloneBlock($blockname, $clones = 1, $replace = true, $indexVariables = false, $variableReplacements = null)
+    public function cloneBlock($blockname, $clones = 1, $replace = false, $indexVariables = false, $variableReplacements = null)
     {
         $xmlBlock = null;
-        $matches = [];
-        $escapedMacroOpeningChars = self::$macroOpeningChars;
-        $escapedMacroClosingChars = self::$macroClosingChars;
-        preg_match(
-            //'/(.*((?s)<w:p\b(?:(?!<w:p\b).)*?\{{' . $blockname . '}<\/w:.*?p>))(.*)((?s)<w:p\b(?:(?!<w:p\b).)[^$]*?\{{\/' . $blockname . '}<\/w:.*?p>)/is',
-            '/(.*((?s)<w:p\b(?:(?!<w:p\b).)*?\\' . $escapedMacroOpeningChars . $blockname . $escapedMacroClosingChars . '<\/w:.*?p>))(.*)((?s)<w:p\b(?:(?!<w:p\b).)[^$]*?\\' . $escapedMacroOpeningChars . '\/' . $blockname . $escapedMacroClosingChars . '<\/w:.*?p>)/is',
-            //'/(.*((?s)<w:p\b(?:(?!<w:p\b).)*?\\'. $escapedMacroOpeningChars . $blockname . '}<\/w:.*?p>))(.*)((?s)<w:p\b(?:(?!<w:p\b).)[^$]*?\\'.$escapedMacroOpeningChars.'\/' . $blockname . '}<\/w:.*?p>)/is',
-            $this->tempDocumentMainPart,
-            $matches
-        );
+        $matches = array();
+        list($matches[1],$matches[2],$matches[3]) = $this->getBlocks($blockname);
+        if (isset($matches[2])&&$matches[2]) {
 
-        if (isset($matches[3])) {
-            $xmlBlock = $matches[3];
+            $xmlBlock = $matches[2];
             if ($indexVariables) {
                 $cloned = $this->indexClonedVariables($clones, $xmlBlock);
             } elseif ($variableReplacements !== null && is_array($variableReplacements)) {
                 $cloned = $this->replaceClonedVariables($variableReplacements, $xmlBlock);
             } else {
-                $cloned = [];
-                for ($i = 1; $i <= $clones; ++$i) {
+                $cloned = array();
+                for ($i = 1; $i <= $clones; $i++) {
                     $cloned[] = $xmlBlock;
                 }
             }
 
             if ($replace) {
                 $this->tempDocumentMainPart = str_replace(
-                    $matches[2] . $matches[3] . $matches[4],
+                    $matches[1] . $matches[2] . $matches[3],
                     implode('', $cloned),
+                    $this->tempDocumentMainPart
+                );
+            } else {
+                $this->tempDocumentMainPart = str_replace(
+                    $matches[1] . $matches[2] . $matches[3],
+                    implode('', $cloned) . $matches[1] . $matches[2] . $matches[3],
                     $this->tempDocumentMainPart
                 );
             }
@@ -936,25 +934,45 @@ class TemplateProcessor
     }
 
     /**
+     * Get part of block for cloneBlock
+     *
+     * @param string $blockName Block name to clone
+     *
+     * @return array aus drei Bl�cken: Block1: ${blockName}, Block2: Text im Block, Block3: ${blockName}
+     */
+    private function getBlocks($blockName){
+        $dataXML = $this->tempDocumentMainPart;
+        if(stripos($dataXML,'{'.$blockName.'}') && stripos($dataXML,'{/'.$blockName.'}')){
+            $startBlock1 = strrpos(substr($dataXML,0,stripos($dataXML,'{'.$blockName.'}')), '<w:p ');
+            $lengthBlock1 = (stripos(substr($dataXML,$startBlock1),'p>')+2);
+            $block1 = substr($dataXML,$startBlock1,$lengthBlock1);
+            $startBlock3 = strrpos(substr($dataXML,0,stripos($dataXML,'{/'.$blockName.'}')), '<w:p ');
+            $lengthBlock3 = (stripos(substr($dataXML,$startBlock3),'p>')+2);
+            $block3 = substr($dataXML,$startBlock3,$lengthBlock3);
+            $block2 = substr($dataXML,$startBlock1+$lengthBlock1,$startBlock3-($startBlock1+$lengthBlock1));
+            return array($block1, $block2, $block3);
+        }
+        return array(0,0,0);
+    }
+
+    /**
      * Replace a block.
+     * TODO: Does not work completely, Block is always deleted
      *
      * @param string $blockname
      * @param string $replacement
      */
-    public function replaceBlock($blockname, $replacement): void
+    public function replaceBlock($blockname, $replacement)
     {
-        $matches = [];
-        $escapedMacroOpeningChars = preg_quote(self::$macroOpeningChars);
-        $escapedMacroClosingChars = preg_quote(self::$macroClosingChars);
-        preg_match(
-            '/(<\?xml.*)(<w:p.*>' . $escapedMacroOpeningChars . $blockname . $escapedMacroClosingChars . '<\/w:.*?p>)(.*)(<w:p.*' . $escapedMacroOpeningChars . '\/' . $blockname . $escapedMacroClosingChars . '<\/w:.*?p>)/is',
-            $this->tempDocumentMainPart,
-            $matches
-        );
+        $matches = array();
+        //$replace = static::ensureUtf8Encoded($replacement);
+        //$xmlEscaper = new Xml();
+        //$replace = $xmlEscaper->escape($replace);
+        list($matches[1],$matches[2],$matches[3]) = $this->getBlocks($blockname);
 
-        if (isset($matches[3])) {
+        if (isset($matches[1], $matches[2], $matches[3]) && $matches[1] && $matches[2] && $matches[3]) {
             $this->tempDocumentMainPart = str_replace(
-                $matches[2] . $matches[3] . $matches[4],
+                $matches[1] . $matches[2] . $matches[3],
                 $replacement,
                 $this->tempDocumentMainPart
             );
