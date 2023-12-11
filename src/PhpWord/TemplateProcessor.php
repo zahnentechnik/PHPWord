@@ -42,7 +42,7 @@ class TemplateProcessor
     protected $zipClass;
 
     /**
-     * @var string Temporary document filename (with path)
+     * @var string|false Temporary document filename (with path)
      */
     protected $tempDocumentFilename;
 
@@ -99,10 +99,20 @@ class TemplateProcessor
 
     protected static $macroClosingChars = '}';
 
+    public function repairListItems($numIdBullets, $numIdNumbers, $bullets = false) {
+        // for the moment we use either numbers or bullets for all list
+        $replace = $numIdNumbers;
+        if($bullets) $replace = $numIdBullets;
+
+        $this->tempDocumentMainPart = str_replace('<w:numId w:val=""', '<w:numId w:val="' . $replace . '"', $this->tempDocumentMainPart);
+    }
+
     /**
+     * @param string $documentTemplate The fully qualified template filename
+     * @throws CreateTemporaryFileException
+     * @throws CopyFileException
      * @since 0.12.0 Throws CreateTemporaryFileException and CopyFileException instead of Exception
      *
-     * @param string $documentTemplate The fully qualified template filename
      */
     public function __construct($documentTemplate)
     {
