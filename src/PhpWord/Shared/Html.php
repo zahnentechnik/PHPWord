@@ -106,7 +106,7 @@ class Html
      * parse Inline style of a node.
      *
      * @param DOMNode $node Node to check on attributes and to compile a style array
-     * @param array $styles is supplied, the inline style attributes are added to the already existing style
+     * @param array<string, mixed> $styles is supplied, the inline style attributes are added to the already existing style
      *
      * @return array
      */
@@ -115,7 +115,9 @@ class Html
         if (XML_ELEMENT_NODE == $node->nodeType) {
             $attributes = $node->attributes; // get all the attributes(eg: id, class)
 
-            $bidi = ($attributes['dir'] ?? '') === 'rtl';
+            $attributeDir = $attributes->getNamedItem('dir');
+            $attributeDirValue = $attributeDir ? $attributeDir->nodeValue : '';
+            $bidi = $attributeDirValue === 'rtl';
             foreach ($attributes as $attribute) {
                 $val = $attribute->value;
                 switch (strtolower($attribute->name)) {
@@ -163,15 +165,15 @@ class Html
 
             $attributeIdentifier = $attributes->getNamedItem('id');
             if ($attributeIdentifier && self::$css) {
-                $styles = self::parseStyleDeclarations(self::$css->getStyle('#' . $attributeIdentifier->value), $styles);
+                $styles = self::parseStyleDeclarations(self::$css->getStyle('#' . $attributeIdentifier->nodeValue), $styles);
             }
 
             $attributeClass = $attributes->getNamedItem('class');
             if ($attributeClass) {
                 if (self::$css) {
-                    $styles = self::parseStyleDeclarations(self::$css->getStyle('.' . $attributeClass->value), $styles);
+                    $styles = self::parseStyleDeclarations(self::$css->getStyle('.' . $attributeClass->nodeValue), $styles);
                 }
-                $styles['className'] = $attributeClass->value;
+                $styles['className'] = $attributeClass->nodeValue;
             }
 
             $attributeStyle = $attributes->getNamedItem('style');
@@ -329,10 +331,10 @@ class Html
             return;
         }
 
-        $inputType = $attributes->getNamedItem('type')->value;
+        $inputType = $attributes->getNamedItem('type')->nodeValue;
         switch ($inputType) {
             case 'checkbox':
-                $checked = ($checked = $attributes->getNamedItem('checked')) && $checked->value === 'true' ? true : false;
+                $checked = ($checked = $attributes->getNamedItem('checked')) && $checked->nodeValue === 'true' ? true : false;
                 $textrun = $element->addTextRun($styles['paragraph']);
                 $textrun->addFormField('checkbox')->setValue($checked);
 
@@ -636,15 +638,15 @@ class Html
         return [
             'type' => 'hybridMultilevel',
             'levels' => [
-                ['format' => NumberFormat::BULLET, 'text' => '', 'alignment' => 'left', 'tabPos' => 720, 'left' => 720, 'hanging' => 360, 'font' => 'Symbol', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => 'o', 'alignment' => 'left', 'tabPos' => 1440, 'left' => 1440, 'hanging' => 360, 'font' => 'Courier New', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => '', 'alignment' => 'left', 'tabPos' => 2160, 'left' => 2160, 'hanging' => 360, 'font' => 'Wingdings', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => '', 'alignment' => 'left', 'tabPos' => 2880, 'left' => 2880, 'hanging' => 360, 'font' => 'Symbol', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => 'o', 'alignment' => 'left', 'tabPos' => 3600, 'left' => 3600, 'hanging' => 360, 'font' => 'Courier New', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => '', 'alignment' => 'left', 'tabPos' => 4320, 'left' => 4320, 'hanging' => 360, 'font' => 'Wingdings', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => '', 'alignment' => 'left', 'tabPos' => 5040, 'left' => 5040, 'hanging' => 360, 'font' => 'Symbol', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => 'o', 'alignment' => 'left', 'tabPos' => 5760, 'left' => 5760, 'hanging' => 360, 'font' => 'Courier New', 'hint' => 'default'],
-                ['format' => NumberFormat::BULLET, 'text' => '', 'alignment' => 'left', 'tabPos' => 6480, 'left' => 6480, 'hanging' => 360, 'font' => 'Wingdings', 'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '•', 'alignment' => 'left', 'tabPos' => 720,  'left' => 720,  'hanging' => 360, 'font' => 'Symbol',      'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '◦',  'alignment' => 'left', 'tabPos' => 1440, 'left' => 1440, 'hanging' => 360, 'font' => 'Courier New', 'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '•', 'alignment' => 'left', 'tabPos' => 2160, 'left' => 2160, 'hanging' => 360, 'font' => 'Wingdings',   'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '•', 'alignment' => 'left', 'tabPos' => 2880, 'left' => 2880, 'hanging' => 360, 'font' => 'Symbol',      'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '◦',  'alignment' => 'left', 'tabPos' => 3600, 'left' => 3600, 'hanging' => 360, 'font' => 'Courier New', 'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '•', 'alignment' => 'left', 'tabPos' => 4320, 'left' => 4320, 'hanging' => 360, 'font' => 'Wingdings',   'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '•', 'alignment' => 'left', 'tabPos' => 5040, 'left' => 5040, 'hanging' => 360, 'font' => 'Symbol',      'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '◦',  'alignment' => 'left', 'tabPos' => 5760, 'left' => 5760, 'hanging' => 360, 'font' => 'Courier New', 'hint' => 'default'],
+                ['format' => NumberFormat::BULLET, 'text' => '•', 'alignment' => 'left', 'tabPos' => 6480, 'left' => 6480, 'hanging' => 360, 'font' => 'Wingdings',   'hint' => 'default'],
             ],
         ];
     }
@@ -914,12 +916,34 @@ class Html
                     break;
                 case 'width':
                     $width = $attribute->value;
+
+                    // pt
+                    if (false !== strpos($width, 'pt')) {
+                        $width = Converter::pointToPixel((float) str_replace('pt', '', $width));
+                    }
+
+                    // px
+                    if (false !== strpos($width, 'px')) {
+                        $width = str_replace('px', '', $width);
+                    }
+
                     $style['width'] = $width;
                     $style['unit'] = \PhpOffice\PhpWord\Style\Image::UNIT_PX;
 
                     break;
                 case 'height':
                     $height = $attribute->value;
+
+                    // pt
+                    if (false !== strpos($height, 'pt')) {
+                        $height = Converter::pointToPixel((float) str_replace('pt', '', $height));
+                    }
+
+                    // px
+                    if (false !== strpos($height, 'px')) {
+                        $height = str_replace('px', '', $height);
+                    }
+
                     $style['height'] = $height;
                     $style['unit'] = \PhpOffice\PhpWord\Style\Image::UNIT_PX;
 
@@ -1146,7 +1170,11 @@ class Html
         }
         $styles['font'] = self::parseInlineStyle($node, $styles['font']);
 
-        if (strpos($target, '#') === 0) {
+        if (empty($target)) {
+            $target = '#';
+        }
+
+        if (strpos($target, '#') === 0 && strlen($target) > 1) {
             return $element->addLink(substr($target, 1), $node->textContent, $styles['font'], $styles['paragraph'], true);
         }
 
